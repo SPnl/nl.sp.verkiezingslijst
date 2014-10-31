@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/contact/verkiezingslijst</path>
+    <page_callback>CRM_Verkiezingslijst_Page_Verkiezingslijst</page_callback>
+    <title>Verkiezingslijst</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/contact/verkiezingslijst/positie</path>
+    <page_callback>CRM_Verkiezingslijst_Form_Verkiezingslijst</page_callback>
+    <title>Verkiezingslijst</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

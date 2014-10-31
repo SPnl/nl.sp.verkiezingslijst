@@ -3,6 +3,35 @@
 require_once 'verkiezingslijst.civix.php';
 
 /**
+ * Implementatio of hook__civicrm_tabs
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_tabs
+ */
+function verkiezingslijst_civicrm_tabs(&$tabs, $contactID) {
+  $settings = CRM_Verkiezingslijst_Config_Settings::singleton();
+  
+  $isPartijContact = false;
+  $subtypes = CRM_Contact_BAO_Contact::getContactSubType($contactID);
+  foreach($subtypes as $subtype) {
+    if (in_array($subtype, $settings->getPartijContactTypes())) {
+      $isPartijContact = true;
+      break;
+    }
+  }
+  
+  if ($isPartijContact) {
+    $url = CRM_Utils_System::url('civicrm/contact/verkiezingslijst', "&reset=1&cid=$contactID&snippet=1");
+  
+    $tabs[] = array(
+      'id' => 'verkiezingslijst',
+      'url' => $url,
+      'count' => 0,
+      'title' => ts('Verkiezingslijsten'),
+      'weight' => -100
+    );
+  }
+}
+
+/**
  * Implementation of hook_civicrm_config
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config

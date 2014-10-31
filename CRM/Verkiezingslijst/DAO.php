@@ -42,7 +42,7 @@ class CRM_Verkiezingslijst_DAO extends CRM_Core_DAO {
           'required' => true,
         ),
         'verkiezing' => array(
-          'name' => 'label',
+          'name' => 'verkiezing',
           'type' => CRM_Utils_Type::T_STRING,
           'required' => true,
           'maxlength' => 255,
@@ -62,7 +62,7 @@ class CRM_Verkiezingslijst_DAO extends CRM_Core_DAO {
           'required' => true,
         ),
         'positie' => array(
-          'name' => 'journal_id',
+          'name' => 'positie',
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ),

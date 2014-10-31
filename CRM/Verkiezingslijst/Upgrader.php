@@ -12,7 +12,7 @@ class CRM_Verkiezingslijst_Upgrader extends CRM_Verkiezingslijst_Upgrader_Base {
   
   protected function addOptionGroup($name, $title) {
     try {
-      $existing = civcirm_api3('OptionGroup', 'getsingle', array('name' => $name));
+      $existing = civicrm_api3('OptionGroup', 'getsingle', array('name' => $name));
       return;
     } catch (Exception $ex) {
       //do nothing

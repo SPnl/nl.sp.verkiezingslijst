@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS `civicrm_verkiezingslijst` (
   `positie` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE `verkiezing` (  `verkiezing` ,  `partij_contact_id`, `positie` ),
-  UNIQUE `kandidaat` (  `verkiezing` ,  `partij_contact_id`, `kandidaat_contact_id` ),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  UNIQUE `kandidaat` (  `verkiezing` ,  `partij_contact_id`, `kandidaat_contact_id` )
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci AUTO_INCREMENT=1 ;
