@@ -12,7 +12,7 @@ function verkiezingslijst_civicrm_tabs(&$tabs, $contactID) {
   $isPartijContact = false;
   $subtypes = CRM_Contact_BAO_Contact::getContactSubType($contactID);
   foreach($subtypes as $subtype) {
-    if (in_array($subtype, $settings->getPartijContactTypes())) {
+    if (in_array(strtolower($subtype), $settings->getPartijContactTypes())) {
       $isPartijContact = true;
       break;
     }

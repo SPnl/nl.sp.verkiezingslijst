@@ -21,10 +21,10 @@ class CRM_Verkiezingslijst_Config_Settings {
   
   public function getPartijContactTypes() {
     return array(
-      'SP_Afdeling',
-      'SP_Provincie',
-      'SP_Fractie',
-      'SP_Landelijk'
+      strtolower('SP_Afdeling'),
+      strtolower('SP_Provincie'),
+      strtolower('SP_Fractie'),
+      strtolower('SP_Landelijk')
     );
   }
   
