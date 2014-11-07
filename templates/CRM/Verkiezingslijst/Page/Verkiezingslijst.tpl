@@ -5,7 +5,7 @@
 {if $rows}
     {if $action ne 1 and $action ne 2}
         <div class="action-link">
-        <a href="{crmURL q="action=add&reset=1"}" id="newPositie" class="button"><span><div class="icon add-icon"></div>{ts}Voeg nieuwe kandidaat toe{/ts}</span></a>
+        <a href="{crmURL q="action=add&reset=1&cid=`$cid`"}" id="newPositie" class="button"><span><div class="icon add-icon"></div>{ts}Voeg nieuwe kandidaat toe{/ts}</span></a>
         </div>
     {/if}
 
@@ -38,7 +38,7 @@
         {ts}Er zijn geen verkiezingslijsten{/ts}
      </div>
     <div class="action-link">
-        <a href="{crmURL q="action=add&reset=1"}" id="newPositie" class="button"><span><div class="icon add-icon"></div>{ts}Voeg nieuwe kandidaat toe{/ts}</span></a>
+        <a href="{crmURL q="action=add&reset=1&cid=`$cid`"}" id="newPositie" class="button"><span><div class="icon add-icon"></div>{ts}Voeg nieuwe kandidaat toe{/ts}</span></a>
     </div>
 {/if}
 {/if}

@@ -24,4 +24,41 @@ class CRM_Verkiezingslijst_BAO extends CRM_Verkiezingslijst_DAO {
     return $return;  
   }
   
+  public static function checkPositie($partij_contact_id, $verkiezing, $positie, $kandidaat_contact_id) {
+    $sql = "SELECT * FROM `civicrm_verkiezingslijst` WHERE 
+        `partij_contact_id` = %1 AND `verkiezing` = %2 AND `positie` = %3 AND `kandidaat_contact_id` != %4";
+    $params = array();
+    $params[1] = array($partij_contact_id, 'Integer');
+    $params[2] = array($verkiezing, 'String');
+    $params[3] = array($positie, 'Integer');
+    $params[4] = array($kandidaat_contact_id, 'Integer');
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    if ($dao->fetch()) {
+      return $dao->kandidaat_contact_id;
+    }
+    return false;
+  }
+  
+  public static function checkKandidaat($partij_contact_id, $verkiezing, $kandidaat_contact_id) {
+    $sql = "SELECT * FROM `civicrm_verkiezingslijst` WHERE 
+        `partij_contact_id` = %1 AND `verkiezing` = %2 AND `kandidaat_contact_id` = %3";
+    $params = array();
+    $params[1] = array($partij_contact_id, 'Integer');
+    $params[2] = array($verkiezing, 'String');
+    $params[3] = array($kandidaat_contact_id, 'Integer');
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+    if ($dao->fetch()) {
+      return $dao->id;
+    }
+    return false;
+  }
+  
+  public static function getCountPerPartij($partij_contact_id) {
+    $sql = "SELECT COUNT(DISTINCT(`verkiezing`)) AS `total` FROM `civicrm_verkiezingslijst` WHERE `partij_contact_id` = %1";
+    $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($partij_contact_id, 'Integer')));
+    if ($dao->fetch()) {
+      return $dao->total;
+    }
+    return 0;
+  }
 }

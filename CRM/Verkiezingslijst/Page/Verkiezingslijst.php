@@ -27,7 +27,7 @@ class CRM_Verkiezingslijst_Page_Verkiezingslijst extends CRM_Core_Page_Basic {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String',$this, FALSE, 0);
 
     // Example: Assign a variable for use in a template
-    $this->assign('currentTime', date('Y-m-d H:i:s'));
+    $this->assign('cid', $this->_cid);
 
     return parent::run();
   }
@@ -52,6 +52,10 @@ class CRM_Verkiezingslijst_Page_Verkiezingslijst extends CRM_Core_Page_Basic {
     }
     
     $this->assign('rows', $rows);
+    
+    /*$session = CRM_Core_Session::singleton();
+    $userContext = $this->userContext();
+    $session->pushUserContext($userContext);*/
   }
 
   public function editForm() {
@@ -87,7 +91,12 @@ class CRM_Verkiezingslijst_Page_Verkiezingslijst extends CRM_Core_Page_Basic {
   }
 
   public function userContext($mode = NULL) {
-    return 'civicrm/contact/verkeizingslijst?reset=1&selectedChild=verkeizingslijst&cid='.$this->_cid;
+    return 'civicrm/contact/view';
+    
+  }
+  
+  function userContextParams($mode = NULL) {
+    return 'reset=1&selectedChild=verkeizingslijst&cid='.$this->_cid;
   }
 
 }

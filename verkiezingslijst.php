@@ -24,7 +24,7 @@ function verkiezingslijst_civicrm_tabs(&$tabs, $contactID) {
     $tabs[] = array(
       'id' => 'verkiezingslijst',
       'url' => $url,
-      'count' => 0,
+      'count' => CRM_Verkiezingslijst_BAO::getCountPerPartij($contactID),
       'title' => ts('Verkiezingslijsten'),
       'weight' => -100
     );

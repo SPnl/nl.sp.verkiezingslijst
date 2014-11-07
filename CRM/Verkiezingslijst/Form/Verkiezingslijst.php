@@ -8,50 +8,161 @@ require_once 'CRM/Core/Form.php';
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC43/QuickForm+Reference
  */
 class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
+  
+  protected $_contactId;
+  
+  protected $_id;
+  
+  function preProcess() {
+    parent::preProcess();
+    $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
+    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+  }
+  
   function buildQuickForm() {
+    $this->add('hidden', 'cid');
+    $this->add('hidden', 'id');
+    
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      $this->addButtons(array(
+        array(
+          'type' => 'next',
+          'name' => ts('Delete'),
+          'isDefault' => TRUE,
+        ),
+        array(
+          'type' => 'cancel',
+          'name' => ts('Cancel'),
+        ),
+          )
+      );
+      return;
+    } else {
+      // add form elements
+      $this->add(
+        'select', // field type
+        'verkiezing', // field name
+        'Verkiezing', // field label
+        $this->getVerkiezingen(), // list of options
+        true // is required
+      );
+      $this->add(
+        'text', // field type
+        'positie', // field name
+        'Positie', // field label
+        true // is required
+      );
 
-    // add form elements
-    $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
-      true // is required
-    );
-    $this->addButtons(array(
-      array(
-        'type' => 'submit',
-        'name' => ts('Submit'),
-        'isDefault' => TRUE,
-      ),
-    ));
+      CRM_Contact_Form_NewContact::buildQuickForm($this);
 
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
+      $this->addButtons(array(
+        array(
+          'type' => 'done',
+          'name' => ts('Submit'),
+          'isDefault' => TRUE,
+        ),
+      ));
+    }
+    
     parent::buildQuickForm();
   }
 
   function postProcess() {
-    $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']]
-    )));
+    $params = $this->controller->exportValues($this->_name);
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      $dao = new CRM_Verkiezingslijst_BAO();
+      $dao->id = $this->_id;
+      if ($dao->find(TRUE)) {
+        $dao->delete();
+      }
+      CRM_Core_Session::setStatus(ts('Selected kandidaat verwijderd.'), ts('Deleted'), 'success');
+      return;
+    }
+
+    $kandidaat_id = $params['contact_select_id'][1];
+    
+    $bao = new CRM_Verkiezingslijst_BAO();
+    $bao->positie = $params['positie'];
+    $bao->verkiezing = $params['verkiezing'];
+    $bao->kandidaat_contact_id = $kandidaat_id;
+    $bao->partij_contact_id = $this->_contactId;
+    
+    if ($this->_id) {
+      $bao->id = $this->_id;
+    }
+    
+    $bao->save();
+    
     parent::postProcess();
   }
-
-  function getColorOptions() {
-    $options = array(
-      '' => ts('- select -'),
-      '#f00' => ts('Red'),
-      '#0f0' => ts('Green'),
-      '#00f' => ts('Blue'),
-      '#f0f' => ts('Purple'),
-    );
-    foreach (array('1','2','3','4','5','6','7','8','9','a','b','c','d','e') as $f) {
-      $options["#{$f}{$f}{$f}"] = ts('Grey (%1)', array(1 => $f));
+  
+  function getVerkiezingen() {
+     return array(ts(' - Select -')) + CRM_Core_OptionGroup::values('verkiezingen');
+  }
+  
+  function setDefaultValues() {
+    $defaults = array();
+    
+    if ($this->_id) {
+      $verkiezing = new CRM_Verkiezingslijst_BAO();
+      $verkiezing->id = $this->_id;
+      if ($verkiezing->find(TRUE)) {
+        $this->_contactId = $verkiezing->partij_contact_id;
+        $defaults['id'] = $verkiezing->id;
+        $defaults['verkiezing'] = $verkiezing->verkiezing;
+        $defaults['positie'] = $verkiezing->positie;
+        $defaults['contact_select_id[1]'] = $verkiezing->kandidaat_contact_id;
+        $defaults['contact[1]'] = CRM_Contact_BAO_Contact::displayName($verkiezing->kandidaat_contact_id);
+      }
     }
-    return $options;
+    
+    
+    $defaults['cid'] = $this->_contactId;
+    return $defaults;
+  }
+  
+  function validate() {
+    if ($this->_action & CRM_Core_Action::DELETE) {
+      return parent::validate();
+    } else {
+      $params = $this->controller->exportValues($this->_name);
+
+      if (empty($params['contact_select_id'][1])) {
+        $this->_errors['contact[1]'] = ts('U moet een kandidaat selecteren');
+      }
+
+      if (empty($params['verkiezing'])) {
+        $this->_errors['verkiezing'] = ts('U moet een verkiezing selecteren');
+      }
+
+      if (!empty($params['verkiezing']) && !empty($params['contact_select_id'][1])){
+        //check if positie is not taken by another contact
+        $check = CRM_Verkiezingslijst_BAO::checkKandidaat($this->_contactId, $params['verkiezing'], $params['contact_select_id'][1]);
+        if ($check && (!$this->_id || $this->_id != $check)) {
+          $display_name = CRM_Contact_BAO_Contact::displayName($params['contact_select_id'][1]);
+          $this->_errors['contact[1]'] = ts('%1 is kandidaat voor deze verkiezingen', array(
+            1 => $display_name,
+          ));
+        }
+      }
+
+      if (empty($params['positie'])) {
+        $this->_errors['positie'] = ts('Positie is een verplicht veld');
+      } 
+
+      if (!empty($params['positie']) && !empty($params['verkiezing']) && !empty($params['contact_select_id'][1])){
+        //check if positie is not taken by another contact
+        $check = CRM_Verkiezingslijst_BAO::checkPositie($this->_contactId, $params['verkiezing'], $params['positie'], $params['contact_select_id'][1]);
+        if ($check) {
+          $display_name = CRM_Contact_BAO_Contact::displayName($check);
+          $this->_errors['positie'] = ts('Plek %2 is al ingenomen door %1', array(
+            1 => $display_name,
+            2 => $params['positie'],
+          ));
+        }
+      }
+      return parent::validate();
+    }
   }
 
   /**
