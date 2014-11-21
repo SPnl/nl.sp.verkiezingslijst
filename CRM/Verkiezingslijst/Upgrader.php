@@ -7,7 +7,7 @@ class CRM_Verkiezingslijst_Upgrader extends CRM_Verkiezingslijst_Upgrader_Base {
 
   public function install() {
     $this->executeSqlFile('sql/verkiezingslijst.sql');
-    $this->addOptionGroup('verkiezingen', 'Veriezingen');
+    $this->addOptionGroup('verkiezingen', 'Verkiezingen');
   }
   
   protected function addOptionGroup($name, $title) {
