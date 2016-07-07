@@ -17,6 +17,10 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
     parent::preProcess();
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+
+    $userContext = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&&selectedChild=verkiezingslijst&cid='.$this->_contactId);
+    $session = CRM_Core_Session::singleton();
+    $session->replaceUserContext($userContext);
   }
   
   function buildQuickForm() {
@@ -53,7 +57,13 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
         true // is required
       );
 
-      CRM_Contact_Form_NewContact::buildQuickForm($this);
+      //CRM_Contact_Form_NewContact::buildQuickForm($this);
+      $attributes = array(
+        'multiple' => false,
+        'create' => false,
+        'api' => array('params' => array('is_deceased' => 0, 'contact_type' => 'Individual'))
+      );
+      $this->addEntityRef('kandidaat_ids', ts('Kandidaat'), $attributes, false);
 
       $this->addButtons(array(
         array(
@@ -79,8 +89,9 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
       return;
     }
 
-    $kandidaat_id = $params['contact_select_id'][1];
-    
+    $kandidaat_ids = explode(',', $params["kandidaat_ids"]);
+    $kandidaat_id = reset($kandidaat_ids);
+
     $bao = new CRM_Verkiezingslijst_BAO();
     $bao->positie = $params['positie'];
     $bao->verkiezing = $params['verkiezing'];
@@ -111,8 +122,8 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
         $defaults['id'] = $verkiezing->id;
         $defaults['verkiezing'] = $verkiezing->verkiezing;
         $defaults['positie'] = $verkiezing->positie;
-        $defaults['contact_select_id[1]'] = $verkiezing->kandidaat_contact_id;
-        $defaults['contact[1]'] = CRM_Contact_BAO_Contact::displayName($verkiezing->kandidaat_contact_id);
+        $defaults['kandidaat_ids'] = array($verkiezing->kandidaat_contact_id);
+        //$defaults['contact[1]'] = CRM_Contact_BAO_Contact::displayName($verkiezing->kandidaat_contact_id);
       }
     }
     
@@ -127,8 +138,8 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
     } else {
       $params = $this->controller->exportValues($this->_name);
 
-      if (empty($params['contact_select_id'][1])) {
-        $this->_errors['contact[1]'] = ts('U moet een kandidaat selecteren');
+      if (empty($params['kandidaat_ids'])) {
+        $this->_errors['kandidaat_ids'] = ts('U moet een kandidaat selecteren');
       }
 
       if (empty($params['verkiezing'])) {

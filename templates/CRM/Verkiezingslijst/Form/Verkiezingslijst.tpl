@@ -12,8 +12,8 @@
 {else}
 
     <div class="crm-section">
-        <div class="label">{ts}Kandidaat{/ts}</div>
-        <div class="content">{include file="CRM/Contact/Form/NewContact.tpl" noLabel=true}</div>
+        <div class="label">{$form.kandidaat_ids.label}</div>
+        <div class="content">{$form.kandidaat_ids.html}</div>
         <div class="clear"></div>
     </div>
 
