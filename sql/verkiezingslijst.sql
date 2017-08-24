@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS `civicrm_verkiezingslijst` (
   `partij_contact_id` int(11) NOT NULL,
   `verkiezing` varchar(255) DEFAULT NULL,
   `positie` int(11) DEFAULT NULL,
+  `afdracht_verklaring_ondertekend` int(11) DEFAULT '0',
+  `gekozen` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE `verkiezing` (  `verkiezing` ,  `partij_contact_id`, `positie` ),
   UNIQUE `kandidaat` (  `verkiezing` ,  `partij_contact_id`, `kandidaat_contact_id` )

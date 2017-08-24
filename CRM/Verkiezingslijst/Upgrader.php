@@ -9,6 +9,14 @@ class CRM_Verkiezingslijst_Upgrader extends CRM_Verkiezingslijst_Upgrader_Base {
     $this->executeSqlFile('sql/verkiezingslijst.sql');
     $this->addOptionGroup('verkiezingen', 'Verkiezingen');
   }
+
+  public function upgrade_1001() {
+    $sql = "ALTER TABLE civicrm_verkiezingslijst 
+            ADD COLUMN `afdracht_verklaring_ondertekend` int(11) DEFAULT '0',
+            ADD COLUMN `gekozen` int(1) DEFAULT '0';";
+    CRM_Core_DAO::executeQuery($sql);
+    return true;
+  }
   
   protected function addOptionGroup($name, $title) {
     try {
