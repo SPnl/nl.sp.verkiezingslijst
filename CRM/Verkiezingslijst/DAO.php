@@ -20,6 +20,10 @@ class CRM_Verkiezingslijst_DAO extends CRM_Core_DAO {
   
   public $positie;
 
+  public $afdracht_verklaring_ondertekend;
+
+  public $gekozen;
+
   /**
    * empty definition for virtual function
    */
@@ -66,6 +70,16 @@ class CRM_Verkiezingslijst_DAO extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'required' => true,
         ),
+        'afdracht_verklaring_ondertekend' => array(
+          'name' => 'afdracht_verklaring_ondertekend',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'required' => true,
+        ),
+        'gekozen' => array(
+          'name' => 'gekozen',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'required' => true,
+        ),
       );
     }
     return self::$_fields;
@@ -86,6 +100,8 @@ class CRM_Verkiezingslijst_DAO extends CRM_Core_DAO {
         'kandidaat_contact_id' => 'kandidaat_contact_id',
         'partij_contact_id' => 'partij_contact_id',
         'positie' => 'positie',
+        'afdracht_verklaring_ondertekend' => 'afdracht_verklaring_ondertekend',
+        'gekozen' => 'gekozen,'
       );
     }
     return self::$_fieldKeys;

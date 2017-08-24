@@ -28,6 +28,18 @@
         <div class="content">{$form.positie.html}</div>
         <div class="clear"></div>
     </div>
+
+    <div class="crm-section">
+        <div class="label">{$form.afdracht_verklaring_ondertekend.label}</div>
+        <div class="content">{$form.afdracht_verklaring_ondertekend.html}</div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="crm-section">
+        <div class="label">{$form.verkozen.label}</div>
+        <div class="content">{$form.verkozen.html}</div>
+        <div class="clear"></div>
+    </div>
 {/if}
 {* FOOTER *}
 <div class="crm-submit-buttons">

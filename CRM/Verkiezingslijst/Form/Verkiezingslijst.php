@@ -65,6 +65,22 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
       );
       $this->addEntityRef('kandidaat_ids', ts('Kandidaat'), $attributes, false);
 
+      $this->add(
+        'select', // field type
+        'afdracht_verklaring_ondertekend', // field name
+        'Afdracht-verklaring ondertekend', // field label
+        array(0 => ts('Nee'), 1 => ts('Ja')), // list of options
+        true // is required
+      );
+
+      $this->add(
+        'select', // field type
+        'verkozen', // field name
+        'Verkozen', // field label
+        array(0 => ts('Nee'), 1 => ts('Ja')), // list of options
+        true // is required
+      );
+
       $this->addButtons(array(
         array(
           'type' => 'done',

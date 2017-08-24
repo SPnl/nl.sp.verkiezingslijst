@@ -19,6 +19,8 @@
                 <th >{ts}Verkiezing{/ts}</th>
                 <th >{ts}Positie{/ts}</th>
                 <th >{ts}Kandidaat{/ts}</th>
+                <th >{ts}Afdracht-verklaring ondertekend{/ts}</th>
+                <th >{ts}Gekozen{/ts}</th>
                 <th >{ts}Action{/ts}</th>
             </tr>
             {foreach from=$rows item=row}
@@ -26,6 +28,8 @@
                     <td class="crm-verkiezingslijst-verkiezing">{$row.verkiezing}</td>
                     <td class="crm-verkiezingslijst-positie">{$row.positie}</td>
                     <td class="crm-verkiezingslijst-kandidaat"><a href="{$row.kandidaat_url}">{$row.kandidaat_display_name}</a></td>
+                    <td class="crm-verkiezingslijst-afdracht_verklaring_ondertekend">{if $row.afdracht_verklaring_ondertekend}Ja{else}Nee{/if}</td>
+                    <td class="crm-verkiezingslijst-verkozen">{if $row.verkozen}Ja{else}Nee{/if}</td>
                     <td>{$row.action|replace:'xx':$row.id}</td>
                 </tr>
             {/foreach}
