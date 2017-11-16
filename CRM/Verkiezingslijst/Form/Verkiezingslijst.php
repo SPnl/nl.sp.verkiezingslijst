@@ -75,8 +75,8 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
 
       $this->add(
         'select', // field type
-        'verkozen', // field name
-        'Verkozen', // field label
+        'gekozen', // field name
+        'Gekozen', // field label
         array(0 => ts('Nee'), 1 => ts('Ja')), // list of options
         true // is required
       );
@@ -112,6 +112,8 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
     $bao->positie = $params['positie'];
     $bao->verkiezing = $params['verkiezing'];
     $bao->kandidaat_contact_id = $kandidaat_id;
+    $bao->afdracht_verklaring_ondertekend = $params['afdracht_verklaring_ondertekend'];
+    $bao->gekozen = $params['gekozen'];
     $bao->partij_contact_id = $this->_contactId;
     
     if ($this->_id) {
@@ -139,6 +141,8 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
         $defaults['verkiezing'] = $verkiezing->verkiezing;
         $defaults['positie'] = $verkiezing->positie;
         $defaults['kandidaat_ids'] = array($verkiezing->kandidaat_contact_id);
+        $defaults['afdracht_verklaring_ondertekend'] = $verkiezing->afdracht_verklaring_ondertekend;
+        $defaults['gekozen'] = $verkiezing->gekozen;
         //$defaults['contact[1]'] = CRM_Contact_BAO_Contact::displayName($verkiezing->kandidaat_contact_id);
       }
     }

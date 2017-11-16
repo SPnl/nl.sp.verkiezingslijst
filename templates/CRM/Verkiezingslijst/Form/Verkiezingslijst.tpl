@@ -36,8 +36,8 @@
     </div>
 
     <div class="crm-section">
-        <div class="label">{$form.verkozen.label}</div>
-        <div class="content">{$form.verkozen.html}</div>
+        <div class="label">{$form.gekozen.label}</div>
+        <div class="content">{$form.gekozen.html}</div>
         <div class="clear"></div>
     </div>
 {/if}
