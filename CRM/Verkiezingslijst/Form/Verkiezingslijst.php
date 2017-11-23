@@ -68,7 +68,7 @@ class CRM_Verkiezingslijst_Form_Verkiezingslijst extends CRM_Core_Form {
       $this->add(
         'select', // field type
         'afdracht_verklaring_ondertekend', // field name
-        'Afdracht-verklaring ondertekend', // field label
+        'Verklaring voor raadsleden van de SP ondertekend', // field label
         array(0 => ts('Nee'), 1 => ts('Ja')), // list of options
         true // is required
       );

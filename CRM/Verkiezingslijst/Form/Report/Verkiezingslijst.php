@@ -10,7 +10,7 @@ class CRM_Verkiezingslijst_Form_Report_Verkiezingslijst extends CRM_Report_Form 
 
   protected $_customGroupExtends = array();
   protected $_customGroupGroupBy = FALSE;
-  protected $_add2groupSupported = FALSE;
+  protected $_add2groupSupported = TRUE;
 
   protected $_noFields = TRUE;
 
@@ -27,11 +27,20 @@ class CRM_Verkiezingslijst_Form_Report_Verkiezingslijst extends CRM_Report_Form 
             'type' => CRM_Utils_Type::T_STRING,
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Core_OptionGroup::values('verkiezingen'),
-          )
+          ),
+          'gekozen' => array(
+            'pseudofield' => true,
+            'dbAlias' => 'v.gekozen',
+            'title' => ts('Gekozen'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_SELECT,
+            'options' => array('' => ts(' - Select - '), 0 => ts('Nee'), 1 => ts('Ja')),
+          ),
         )
       )
     );
     parent::__construct();
+		$this->_aliases['civicrm_contact'] = 'kandidaat';
   }
 
   function preProcess() {
@@ -68,6 +77,15 @@ class CRM_Verkiezingslijst_Form_Report_Verkiezingslijst extends CRM_Report_Form 
         CRM_Utils_Array::value("verkiezing_value", $this->_params),
         CRM_Utils_Array::value("verkiezing_min", $this->_params),
         CRM_Utils_Array::value("verkiezing_max", $this->_params)
+      );
+    }
+    $gekozen = CRM_Utils_Array::value('gekozen_value', $this->_params);
+    if ($gekozen) {
+    	$this->_whereClauses[] = $this->whereClause($this->_columns['civicrm_verkiezingslijst']['filters']['gekozen'],
+        $op,
+        CRM_Utils_Array::value("gekozen_value", $this->_params),
+        CRM_Utils_Array::value("gekozen_min", $this->_params),
+        CRM_Utils_Array::value("gekozen_max", $this->_params)
       );
     }
   }

@@ -19,7 +19,7 @@
                 <th >{ts}Verkiezing{/ts}</th>
                 <th >{ts}Positie{/ts}</th>
                 <th >{ts}Kandidaat{/ts}</th>
-                <th >{ts}Afdracht-verklaring ondertekend{/ts}</th>
+                <th >{ts}Verklaring voor raadsleden van de SP ondertekend{/ts}</th>
                 <th >{ts}Gekozen{/ts}</th>
                 <th >{ts}Action{/ts}</th>
             </tr>
