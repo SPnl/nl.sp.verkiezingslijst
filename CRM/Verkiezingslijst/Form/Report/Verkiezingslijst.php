@@ -36,6 +36,22 @@ class CRM_Verkiezingslijst_Form_Report_Verkiezingslijst extends CRM_Report_Form 
             'operatorType' => CRM_Report_Form::OP_SELECT,
             'options' => array('' => ts(' - Select - '), 0 => ts('Nee'), 1 => ts('Ja')),
           ),
+          'afdeling' => array(
+            'pseudofield' => true,
+            'dbAlias' => 'afdeling.id',
+            'title' => ts('Afdeling'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => $this->getAfdelingen(),
+          ),
+          'provincie' => array(
+            'pseudofield' => true,
+            'dbAlias' => 'civicrm_value_adresgegevens_12.provincie_28',
+            'title' => ts('Provincie'),
+            'type' => CRM_Utils_Type::T_STRING,
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => $this->getProvincies(),
+          ),
         )
       )
     );
@@ -47,6 +63,36 @@ class CRM_Verkiezingslijst_Form_Report_Verkiezingslijst extends CRM_Report_Form 
     $this->assign('reportTitle', ts('Kandidaten verkiezingslijsten'));
     parent::preProcess();
   }
+	
+	public function getAfdelingen() {
+		$afdelingen = civicrm_api3('Contact', 'get', array(
+			'contact_type' => 'Organization',
+			'contact_sub_type' => 'SP_Afdeling',
+			'is_deleted' => 0,
+			'options' => array('limit' => 0),
+			'return' => array('id', 'display_name'),
+		));
+		$return = array();
+		foreach($afdelingen['values'] as $afdeling) {
+			$return[$afdeling['id']] = $afdeling['display_name'];
+		}
+		return $return;
+	}
+
+	public function getProvincies() {
+		return array(
+			'Drenthe' => 'Drenthe',
+			'Flevoland' => 'Flevoland',
+			'Friesland' => 'Friesland',
+			'Gelderland' => 'Gelderland',
+			'Groningen' => 'Groningen',
+			'Limburg' => 'Limburg',
+			'Noord-Brabant' => 'Noord-Brabant',
+			'Noord-Holland' => 'Noord-Holland',
+			'Zeeland' => 'Zeeland',
+			'Zuid-Holland' => 'Zuid-Holland'
+		);
+	}
 
   public function select() {
     $this->_select = "SELECT 
@@ -86,6 +132,26 @@ class CRM_Verkiezingslijst_Form_Report_Verkiezingslijst extends CRM_Report_Form 
         CRM_Utils_Array::value("gekozen_value", $this->_params),
         CRM_Utils_Array::value("gekozen_min", $this->_params),
         CRM_Utils_Array::value("gekozen_max", $this->_params)
+      );
+    }
+    $afdeling_op = CRM_Utils_Array::value("afdeling_op", $this->_params);
+    $afdeling_value = CRM_Utils_Array::value("afdeling_value", $this->_params);
+    if ($afdeling_op && $afdeling_value) {
+      $this->_whereClauses[] = $this->whereClause($this->_columns['civicrm_verkiezingslijst']['filters']['afdeling'],
+        CRM_Utils_Array::value("afdeling_op", $this->_params),
+        CRM_Utils_Array::value("afdeling_value", $this->_params),
+        CRM_Utils_Array::value("afdeling_min", $this->_params),
+        CRM_Utils_Array::value("afdeling_max", $this->_params)
+      );
+    }
+		$provincie_op = CRM_Utils_Array::value("provincie_op", $this->_params);
+		$provincie_value = CRM_Utils_Array::value("provincie_value", $this->_params);
+    if ($provincie_op && $provincie_value) {
+      $this->_whereClauses[] = $this->whereClause($this->_columns['civicrm_verkiezingslijst']['filters']['provincie'],
+        CRM_Utils_Array::value("provincie_op", $this->_params),
+        CRM_Utils_Array::value("provincie_value", $this->_params),
+        CRM_Utils_Array::value("provincie_min", $this->_params),
+        CRM_Utils_Array::value("provincie_max", $this->_params)
       );
     }
   }
