@@ -47,9 +47,9 @@ class CRM_Verkiezingslijst_Page_Verkiezingslijst extends CRM_Core_Page_Basic {
       $row['afdracht_verklaring_ondertekend'] = $kandidaat['afdracht_verklaring_ondertekend'];
       $row['gekozen'] = $kandidaat['gekozen'];
       $row['kandidaat_url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $kandidaat['kandidaat_contact_id']);
-      //$row['action'] = CRM_Core_Action::formLink(self::links(), $action,
-      //  array('id' => $kandidaat['id'])
-      //);
+      $row['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        array('id' => $kandidaat['id'])
+      );
       $rows[] = $row;
     }
     
