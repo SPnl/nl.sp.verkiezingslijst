@@ -36,7 +36,6 @@ class CRM_Verkiezingslijst_Page_Verkiezingslijst extends CRM_Core_Page_Basic {
     
     $kandidaten = CRM_Verkiezingslijst_BAO::findByPartij($this->_cid);
     $rows = array();
-    $allowed_afdelingen = [806902, 806883];
     foreach($kandidaten as $kandidaat) {
       list($display_name, $image, $image_url) = CRM_Contact_BAO_Contact::getDisplayAndImage($kandidaat['kandidaat_contact_id']);
       $row = array();
@@ -48,11 +47,9 @@ class CRM_Verkiezingslijst_Page_Verkiezingslijst extends CRM_Core_Page_Basic {
       $row['afdracht_verklaring_ondertekend'] = $kandidaat['afdracht_verklaring_ondertekend'];
       $row['gekozen'] = $kandidaat['gekozen'];
       $row['kandidaat_url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $kandidaat['kandidaat_contact_id']);
-      if (in_array($this->_cid, $allowed_afdelingen)) {
-        $row['action'] = CRM_Core_Action::formLink(self::links(), $action,
-	  array('id' => $kandidaat['id'])
-	);
-      }
+      //$row['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      //  array('id' => $kandidaat['id'])
+      //);
       $rows[] = $row;
     }
     
